@@ -1,0 +1,100 @@
+version: '3.8'
+
+
+services:
+  user:
+    image: niranjandocker101/user_interface:1.0.3
+    ports:
+      - 3000:3000
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"    
+
+  authentication:
+    image: niranjandocker101/authentication:1.0.3
+    ports:
+      - 3001:3001
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"    
+
+  user_management:
+    image: niranjandocker101/user_management:1.0.3
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"    
+
+  room_management:
+    image: niranjandocker101/room_management:1.0.3
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"     
+  
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"    
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    logging:
+      driver: "json-file"  
+      options:
+        max-size: "10m"   
+        max-file: "3"    
+
+volumes:
+  mongo-data:
+    driver: local

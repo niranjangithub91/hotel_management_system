@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package user;
+option go_package = "./userpb";
+
+service All_the_services {
+  rpc Login(Login_data_send) returns (User);
+}
+
+//Communication between authentication and user_interface-------
+message  Login_data_send{
+  string user_id = 1;
+  string pass=2;
+}
+
+message User{
+    string name=1;
+    int64 age=2;
+    string email=3;
+    string contact=4;
+    bool manager=5;
+    string department=6;
+    bool status=7;
+}
+message Login_data_return {
+    User user=1;
+}
+
+///-----------------------------------------------------------------
+
+
+
+
+
+//Usermanagement_service_comm with user_interface_service
+
+message Send_User_Data{
+  string name=1;
+  string password=2;
+  int64 age=3;
+  string gmail=4;
+  string contact=5;
+  bool manager=6;
+  string department=7;
+}
+message Send_delete_user_data{
+  string name=1;
+}
+
+message Status{
+  bool status=1;
+}
+
+service Usermanagement_service{
+  rpc Add_Users(Send_User_Data) returns (Status);
+  rpc Delete_user(Send_delete_user_data) returns (Status);
+}
+
+////----------------------------------------------/////////////////////
+
+
+
+
+//RoomManagement Service with User_interface_communication-------////////
+
+message SendRoomDetails{
+  int64 roomnumber=1;
+  float price=2;
+  repeated string features=3;
+  bool Occupencystatus=4;
+}
+
+
+message SendDeleteRoomDetail{
+  int64 roomnumber=1;
+}
+message SendFeatureUpdate{
+  int64 roomnumber=1;
+  repeated string features=2;
+}
+message SendPriceUpdate{
+  int64 roomnumber=1;
+  float price=2;
+}
+
+service Roommanagement_service{
+  rpc Add_rooms(SendRoomDetails) returns (Status);
+  rpc Delete_room(SendDeleteRoomDetail) returns (Status);
+  rpc UpdateFeatures(SendFeatureUpdate) returns(Status);
+  rpc UpdatePrice(SendPriceUpdate) returns(Status);
+}
+
+///////////------------------------------------------------------------///////////
+
+
+
+
+////Customer Management and the user interface----------------------------------------------////////////
+
+
+message Send_Customer_details{
+  string name=1;
+  string email=2;
+  string contact=3;
+}
+
+message Send_Delete_details_Customers{
+  string name=1;
+  string email=2;
+  string contact=3;
+}
+
+service Customer_management{
+  rpc Add_Customer(Send_Customer_details) returns(Status);
+}
+
+
+///////////////-------------------------------------------//////////
+
+//////// Email OTP and CUstomer management------------/////////////
+
+message Send_Customer_email{
+  string email=1;
+}
+
+message Send_OTP_back{
+  string otp=1;
+}
+
+service Email_verification{
+  rpc Send_OTP(Send_Customer_email) returns (Send_OTP_back);
+}
+
+////////////////-----------------------------------///////////////////

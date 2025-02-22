@@ -1,0 +1,46 @@
+version: '3.8'
+
+
+services:
+  user:
+    image: niranjandocker101/user_interface:1.0.3
+    ports:
+      - 3000:3000
+
+  authentication:
+    image: niranjandocker101/authentication:1.0.3
+    ports:
+      - 3001:3001
+
+  user_management:
+    image: niranjandocker101/user_management:1.0.3
+    ports:
+      - 3002:3002
+
+  room_management:
+    image: niranjandocker101/room_management:1.0.3
+    ports:
+      - 3003:3003
+  
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+volumes:
+  mongo-data:
+    driver: local
