@@ -1,1 +1,1 @@
-# Distributed_Hotel_Management_System
+# Microservice based Hotel Management system
